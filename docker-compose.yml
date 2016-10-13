@@ -13,5 +13,5 @@ db:
   ports:
     - "5432:5432"
   volumes:
-  - /var/livemapdata:/var/lib/postgresql/data
+  - livemapdbdata:/var/lib/postgresql/data
   restart: always
