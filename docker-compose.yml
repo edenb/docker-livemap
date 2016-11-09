@@ -1,17 +1,30 @@
-web:
-  build: .
-  command: node app.js
-  ports:
-    - "3000:3000"
-  links:
-    - db
-  environment:
-    PORT: 3000
-    DATABASE_URL: postgres://livemap:livemap@db/livemapdb
-db:
-  build: ./postgres
-  ports:
+version: '2'
+services:
+  db:
+    image: postgres
+    ports:
     - "5432:5432"
-  volumes:
-  - livemapdbdata:/var/lib/postgresql/data
-  restart: always
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+  web:
+    image: edenb/livemap
+    ports:
+    - "3000:3000"
+    volumes:
+    - ./overlays:/src/staticlayers:ro
+    - ./tracks:/src/tracks:ro
+    links:
+    - db
+    environment:
+      DATABASE_URL: 'postgres://livemap:livemap@db/livemapdb'
+      PORT: '3000'
+      C_FORCESSL: 'false'
+      C_MQTT_URL: 'mqtt:///test.mosquitto.org:1883'
+      C_MQTT_TOPIC: 'livemap/#'
+      C_WCLIENT_NAME: 'Livemap'
+      C_WCLIENT_LICENSE: 'MIT'
+      C_WCLIENT_ABOUT: 'This is a demo of Livemap'
+    restart: always
+volumes:
+  postgresdb:
