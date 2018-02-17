@@ -5,13 +5,14 @@ services:
     ports:
     - "5432:5432"
     volumes:
-      - postgresdb:/var/lib/postgresql/data
-      - ./initdb:/docker-entrypoint-initdb.d:ro
+    - postgresdb:/var/lib/postgresql/data
+    - initdb:/docker-entrypoint-initdb.d
   web:
     image: edenb/livemap
     ports:
     - "3000:3000"
     volumes:
+    - initdb:/initdb
     - ./overlays:/src/staticlayers:ro
     - ./tracks:/src/tracks:ro
     links:
@@ -27,4 +28,5 @@ services:
       C_WCLIENT_ABOUT: 'This is a demo of Livemap'
     restart: always
 volumes:
+  initdb:
   postgresdb:
