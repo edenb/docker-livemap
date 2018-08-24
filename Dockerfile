@@ -1,4 +1,4 @@
-FROM node:4.4.1
+FROM node:8.11.4
 
 # Create a source folder for the app
 RUN mkdir /src
