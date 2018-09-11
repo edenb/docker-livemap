@@ -18,8 +18,8 @@ services:
     links:
     - db
     environment:
-      DATABASE_URL: 'postgres://livemap:livemap@db/livemapdb'
-      PORT: '3000'
+      C_DB_URL: 'postgres://livemap:livemap@db/livemapdb'
+      C_SERVER_PORT: '3000'
       C_FORCESSL: 'false'
       C_MQTT_URL: 'mqtt:///test.mosquitto.org:1883'
       C_MQTT_TOPIC: 'livemap/#'
