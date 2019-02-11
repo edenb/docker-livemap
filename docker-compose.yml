@@ -19,10 +19,13 @@ services:
     restart: always
   web:
     image: edenb/livemap
+    #build:
+    #  context: ../livemap
+    #  dockerfile: Dockerfile
     ports:
     - "3000:3000"
     volumes:
-    - initdb:/initdb
+    - initdb:/src/initdb
     - ./overlays:/src/staticlayers:ro
     - ./tracks:/src/tracks:ro
     links:

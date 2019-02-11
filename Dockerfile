@@ -11,10 +11,6 @@ RUN curl -sSL https://github.com/edenb/livemap/tarball/master | tar -xvz --strip
 # Install dependencies
 RUN npm install
 
-# Create a folder for the PostgrSQL initialization files (initdb)
-RUN mkdir /initdb
-copy ./initdb/* /initdb/
-
 # Make port available from outside the container
 EXPOSE 3000
 
