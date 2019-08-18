@@ -1,8 +1,8 @@
 FROM node:10.15.1
 
-# Create a source folder for the app
-RUN mkdir /src
-WORKDIR /src
+# Create a project folder for the app
+RUN mkdir /project
+WORKDIR /project
 
 # Get latest version of the Livemap app
 # --strip 1 removes the container folder
@@ -15,4 +15,4 @@ RUN npm install
 EXPOSE 3000
 
 # Start app
-CMD ["node", "app.js"]
+CMD ["node", "src/app.js"]
