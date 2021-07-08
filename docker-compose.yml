@@ -1,23 +1,29 @@
 version: '2'
 services:
   db:
-    image: postgres
+    container_name: livemap-postgres
+    image: postgres:9.6
     ports:
     - "5432:5432"
     volumes:
     - postgresdb:/var/lib/postgresql/data
     - initdb:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     restart: always
   mqtt:
+    container_name: livemap-mosquitto
     image: eclipse-mosquitto
     ports:
     - "1883:1883"
     volumes:
-    - mqtt-config:/mosquitto/config
+    - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     - mqtt-data:/mosquitto/data
     - mqtt-log:/mosquitto/log
     restart: always
-  web:
+  livemap:
+    container_name: livemap-server
     image: edenb/livemap
     #build:
     #  context: ../livemap
@@ -25,25 +31,49 @@ services:
     ports:
     - "3000:3000"
     volumes:
-    - initdb:/src/initdb
-    - ./overlays:/src/staticlayers:ro
-    - ./tracks:/src/tracks:ro
-    links:
-    - db
-    - mqtt
+    - initdb:/app/initdb
+    - staticlayers:/app/staticlayers
+    - tracks:/app/tracks
     environment:
       C_DB_URL: 'postgres://livemap:livemap@db/livemapdb'
       C_SERVER_PORT: '3000'
-      C_FORCESSL: 'false'
+      C_SERVER_FORCESSL: 'false'
+      C_DB_SSL: 'false'
+      C_LOGGER_LEVEL: 'debug'
       C_MQTT_URL: 'mqtt://mqtt:1883'
       C_MQTT_TOPIC: 'livemap/#'
       C_WCLIENT_NAME: 'Livemap'
       C_WCLIENT_LICENSE: 'MIT'
-      C_WCLIENT_ABOUT: 'This is a demo of Livemap'
+      C_WCLIENT_ABOUT: 'Livemap with Docker'
+    depends_on:
+    - demodata
+    - db
+    - mqtt
     restart: always
+  livemap-ui:
+    container_name: livemap-ui
+    image: edenb/livemap-ui
+    #build:
+    #  context: ../livemap-ui
+    #  dockerfile: Dockerfile
+    ports:
+    - "8001:80"
+    environment:
+      VUE_APP_SERVER_URL: 'http://localhost:3000'
+    restart: always
+  demodata:
+    container_name: livemap-demodata
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - staticlayers:/staticlayers
+    - tracks:/tracks
 volumes:
   initdb:
   postgresdb:
   mqtt-config:
   mqtt-data:
   mqtt-log:
+  staticlayers:
+  tracks:

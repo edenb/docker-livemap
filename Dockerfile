@@ -1,18 +1,17 @@
-FROM node:12.22.1
-
-# Create a project folder for the app
-RUN mkdir /project
-WORKDIR /project
+FROM alpine AS build-stage
+WORKDIR /home
+RUN apk --no-cache add curl
 
 # Get latest version of the Livemap app
 # --strip 1 removes the container folder
 RUN curl -sSL https://github.com/edenb/livemap/tarball/master | tar -xvz --strip 1
 
-# Install dependencies
-RUN npm install
+# production stage
+FROM alpine
+RUN addgroup -S user && adduser -S user -G user
+USER user
+WORKDIR /
+COPY --chown=user:user --from=build-stage /home/staticlayers/* ./staticlayers/
+COPY --chown=user:user --from=build-stage /home/tracks/*.gpx ./tracks/
 
-# Make port available from outside the container
-EXPOSE 3000
-
-# Start app
-CMD ["node", "app.js"]
+CMD ["/bin/true"]
