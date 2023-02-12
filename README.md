@@ -1,6 +1,6 @@
 # docker-livemap
 ## Features
-https://github.com/edenb/livemap#live-map
+https://github.com/edenb/livemap#livemap
 ## Installation
 ### Prerequisites
 Docker, docker-compose and git should already be installed on your system.
