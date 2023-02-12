@@ -59,7 +59,7 @@ services:
     ports:
     - "8001:80"
     environment:
-      VUE_APP_SERVER_URL: 'http://localhost:3000'
+      VUE_APP_SERVER_URL: 'http://${DOCKER_HOST}:3000'
     restart: always
   demodata:
     container_name: livemap-demodata
