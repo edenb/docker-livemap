@@ -26,7 +26,7 @@ services:
     container_name: livemap-server
     #image: edenb/livemap
     build:
-      context: https://github.com/edenb/livemap.git#development
+      context: https://github.com/edenb/livemap.git
       dockerfile: Dockerfile.prod
     ports:
     - "3000:3000"
@@ -54,7 +54,7 @@ services:
     container_name: livemap-ui
     #image: edenb/livemap-ui
     build:
-      context: https://github.com/edenb/livemap-ui.git#development
+      context: https://github.com/edenb/livemap-ui.git
       dockerfile: Dockerfile
     ports:
     - "8001:80"
